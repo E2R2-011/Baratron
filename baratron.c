@@ -91,6 +91,8 @@ void instrucciones(int a) {
 	}
 	// MOD 4
 	void jugada(int c[total], int t[totalTablas], int *mr) {
+		if (*mr <= 0) {printf("\n (!) Ya no tienes manos disponibles\n\n"); return;}
+
 		for (int i = total - 1; i > 0; i--) {								
 			int k = rand() % (i + 1);
 			swap(&c[i], &c[k]);
@@ -98,7 +100,9 @@ void instrucciones(int a) {
 		(*mr)--;
 	}
 	// MOD 5
-	void puntuacion(int c[total], int t[totalTablas], int *sa, int *sc, float multi) {
+	void puntuacion(int c[total], int t[totalTablas], int *sa, int *sc, float multi, int *mr) {
+		if (*mr <= 0) {return;}
+		
 		int aciertosEnEstaMano = 0; 
 		for (int i = 0; i < HandN; i++) {
 			for (int j = 0; j < totalTablas; j++) {
@@ -216,12 +220,9 @@ int main() {
 					switch (opc_2) {
 						case 1: {
 							same = 0;
-							if (ManosR <= 0) {
-								printf("\n (!) Ya no tienes manos disponibles\n\n");
-							} else {
-								jugada(cartas, tabla, &ManosR);
-								puntuacion(cartas, tabla, &same, &score, multiglobal);
-							}
+							jugada(cartas, tabla, &ManosR);
+							puntuacion(cartas, tabla, &same, &score, multiglobal, &ManosR);
+
 							break;
 						}
 						case 2: {
