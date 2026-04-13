@@ -21,19 +21,21 @@ void swap(int *a, int *b) {
 void instrucciones(int a) {
 	printf("+----------------------------------------------------------------+\n");
 	printf("|                           COMO JUGAR                           |\n");
-	printf("|  El objetivo del juego es obtener la mayor puntuación posible  |\n");
+	printf("|  El objetivo del juego es obtener la mayor puntuacion posible  |\n");
 	printf("|  mediante la coincidencia de cartas entre tu mano y una tabla  |\n");
 	printf("|  ordenados de manera aleatoria.                                |\n");
 	printf("|  En cada turno, puedrás utilizar una cantidad limitada de manos|\n");
 	printf("|  para jugar, descartes para reemplazar cartas y comodines que  |\n");
-	printf("|  podrás adquirir en una tienda con base en los puntos 		 |\n");
+	printf("|  podras adquirir en una tienda con base en los puntos 		 |\n");
 	printf("|  obtenidos.                       							 |\n");
-	printf("|  El juego continúa mientras dispongas de recursos o cuando     |\n");
+	printf("|  El juego continua mientras dispongas de recursos o cuando     |\n");
 	printf("|  decidas terminar la partida.                                  |\n");
 	printf("+----------------------------------------------------------------+\n");
 }
 
 /// MÓDULOS
+
+
 /// JUGAR		(Edo)
 	// MOD 1
 	void barajear_tabla(int m[total]) {
@@ -117,7 +119,36 @@ void instrucciones(int a) {
 	}
 /// DIFICULTAD		(Rooney)
 	// MOD 6	
+    void elegir_dificultad(int *manosR, int *descardR, int *scoreGoal) {
+		int opcion;
+		printf("\nSelecciona la dificultad:\n1. Facil\n2. Medio\n3. Dificil\nIngrese su opcion: ");
+		scanf("%d", &opcion);
 
+		switch (opcion) {
+			case 1: //Más manos y descartes, menor puntaje necesario
+				*scoreGoal = 1000;
+				*manosR = 6;
+				*descardR = 6;
+				break;
+			case 2: //Valores intermedios para manos, descartes y puntaje
+				*scoreGoal = 2000;
+				*manosR = 5;
+				*descardR = 5;
+				break;
+			case 3: //Menos manos y descartes, mayor puntaje necesario
+				*scoreGoal = 3000;
+				*manosR = 4;
+				*descardR = 4;
+				break;
+			default:
+				printf("Opción invalida, se seleccionara dificultad Facil por defecto.\n");
+				*scoreGoal = 1000;
+				*manosR = 6;
+				*descardR = 6;
+				break;
+		}
+
+	}
 /// TIENDA			(José)
 	// MOD 7
 	void mostrar_catalogo(Comodin opciones[3]) {
@@ -143,27 +174,42 @@ void instrucciones(int a) {
 			printf("Puntos insuficientes.\n");
 		}
 	}
-/// FINALIZAR		(Azul)
+/// FINALIZAR	
 	// MOD 9
+	void resumen_partida(int puntajeFinal, int meta, float multiplicador, 
+						int manosIniciales, int manosRestantes, 
+						int descartesIniciales, int descartesRestantes, 
+						int ganada) {
+		printf("\n+--------------------------------------------------+\n");
+		printf("|               RESUMEN DE PARTIDA                 |\n");
+		printf("+--------------------------------------------------+\n");
+		printf("| Puntuacion final:      %d puntos                 |\n", puntajeFinal);
+		printf("| Meta requerida:        %d puntos                 |\n", meta);
+		printf("| Multiplicador final:   %.2fx                      |\n", multiplicador);
+		printf("| Manos utilizadas:      %d                        |\n", manosIniciales - manosRestantes);
+		printf("| Descartes utilizados:  %d                        |\n", descartesIniciales - descartesRestantes);
+		if (ganada) {
+			printf("| Resultado:             ¡VICTORIA!               |\n");
+		} else {
+			printf("| Resultado:             DERROTA                  |\n");
+		}
+		printf("+--------------------------------------------------+\n");
+		printf("Gracias por jugar. ¡Hasta la próxima!\n\n");
+	}
 
-
-
-
-
-
-
-
-	
 
 
 
 /// MAIN
 int main() {
+
 	srand(time(NULL));
 	// static int ManosR, DescardR;		<-- idk
-	int cartas[total], tabla[totalTablas], opc_1, opc_2, same, score = 0, ManosR, DescardR, c;
+	int cartas[total], tabla[totalTablas], opc_1, opc_2, same, score = 0, ManosR, DescardR, c,scoreGoal=1000;
 	Comodin opcionesTienda[3];
 	float multiglobal = 1.0;
+	int partidaGanada = 0; //variable que recuerda si se ganó o se perdió 
+	int manosIniciales = 0, descartesIniciales = 0;
 	
 	// TODAS LAS CARTAS
 	char POKER[53][4] = {
@@ -202,6 +248,11 @@ int main() {
 				ManosR = 4;
 				DescardR = 4;
 				c = 1;
+				score = 0; //reiniciar puntuación 
+				multiglobal = 1.0; //reiniciar multiplicador
+				manosIniciales = ManosR;
+				descartesIniciales = DescardR;
+				partidaGanada = 0;
 
 				// RONDA
 				do {
@@ -217,6 +268,18 @@ int main() {
 					printf("\nQue quieres hacer?\n\n1. Jugar mano\n2. Eliminar carta\n3. Terminar\n\nIngrese la opcion: ");
 					scanf("%d", &opc_2);
 					
+					if(score>=scoreGoal){
+						printf("\n\n¡Felicidades! Has alcanzado la meta de puntuación, veamos hasta dónde eres capaz de llegar!\n\n");
+						 partidaGanada = 1;
+					}
+					if(ManosR <= 0){
+						printf("\n\n¡Oh no! Has agotado todas tus manos. La partida ha terminado.\n\n");
+						// aqui se podria llamar a la fn de finalizar partida, pero por ahora solo se sale del ciclo
+						partidaGanada = 0; 
+						break;
+					}
+					
+
 					switch (opc_2) {
 						case 1: {
 							same = 0;
@@ -242,7 +305,7 @@ int main() {
 			}
 			/// DIFICULTAD		(Rooney)
 			case 2: {
-				
+				elegir_dificultad(&ManosR, &DescardR, &scoreGoal);
 				break;
 			}
 			/// TIENDA			(José)
@@ -257,14 +320,17 @@ int main() {
 				}
 				break;
 			}	
-			/// TERMINAR		(Azul)
+			/// TERMINAR		(Azul)	
 			case 4: {
-
-				return 0;
+				resumen_partida(score, scoreGoal, multiglobal, 
+                    manosIniciales, ManosR, 
+                    descartesIniciales, DescardR, 
+                    partidaGanada);
+				break;
 			}
 		}
 		
-	} while (1 > 0);
+	} while (opc_1 != 4);
 	
 	return 0;
 }
