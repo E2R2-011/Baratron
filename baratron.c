@@ -61,10 +61,7 @@ void imprimir_logo() {
     printf("\n");
 }
 
-void imprimir_menu(int score, int scoreGoal) {
-    int pct = (scoreGoal > 0) ? (score * 100 / scoreGoal) : 0;
-    if (pct > 100) pct = 100;
-    int barlen = pct / 5;   
+void imprimir_menu() {
     printf(AZUL_B BOLD "\n  +---------------------------------------+\n" RESET);
     printf(AZUL_B BOLD "  |" RESET BLANCO_B BOLD "           MENU PRINCIPAL              " RESET AZUL_B BOLD "|\n" RESET);
     printf(AZUL_B BOLD "  +---------------------------------------+\n" RESET);
@@ -391,7 +388,7 @@ int main() {
     do {
         limpiar_pantalla();
         imprimir_logo();
-        imprimir_menu(score, scoreGoal);
+        imprimir_menu();
         scanf("%d", &opc_1);
  
         switch (opc_1) {
