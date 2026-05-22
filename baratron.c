@@ -5,7 +5,7 @@
 #include <string.h>
  
 // -----------------------------------------------
-//   CODIGOS DE COLOR ANSI
+//   CODIGOS DE COLORES
 // -----------------------------------------------
 #define RESET       "\033[0m"
 #define BOLD        "\033[1m"
@@ -26,7 +26,7 @@
 // -----------------------------------------------
 //   VARIABLES GLOBALES / FUNCIONES EXTRA
 // -----------------------------------------------
-int total = 51, totalTablas = 16, HandN = 7, kk;
+int total = 51, totalTablas = 16, HandN = 7;
  
 typedef struct {
     char nombre[20];
@@ -93,7 +93,7 @@ void imprimir_interfaz_juego(int cartas[], int tabla[], int ManosR, int DescardR
         printf("             " VERDE_B BOLD "|\n" RESET);
     }
  
-    // -- STATS --
+    /// STATS
     printf(VERDE_B BOLD "+------------------------------------------------------------+\n" RESET);
  
     // Barra de manos
@@ -109,7 +109,7 @@ void imprimir_interfaz_juego(int cartas[], int tabla[], int ManosR, int DescardR
     // Puntuacion
     printf(VERDE_B BOLD "|" RESET "  " CYAN_B "Puntuacion: " RESET AMARILLO_B BOLD "%6d" RESET " / " BLANCO_B "%d pts" RESET "                             " VERDE_B BOLD "|\n" RESET, score * 100, scoreGoal);
  
-    // -- MANO --
+    /// MANO
     printf(VERDE_B BOLD "+------------------------------------------------------------+\n" RESET);
     printf(VERDE_B BOLD "|" RESET BLANCO_B BOLD "                          TU MANO                           " RESET VERDE_B BOLD "|\n" RESET);
     printf(VERDE_B BOLD "|" RESET "   ");
@@ -120,7 +120,7 @@ void imprimir_interfaz_juego(int cartas[], int tabla[], int ManosR, int DescardR
     }
     printf(" " VERDE_B BOLD "|\n" RESET);
  
-    // -- ACCIONES --
+    ///ACCIONES
     printf(VERDE_B BOLD "+------------------------------------------------------------+\n" RESET);
     printf(VERDE_B BOLD "|  1." RESET " Jugar mano   " AMARILLO_B "2." RESET " Descartar carta   " ROJO_B    "3." RESET " Salir al menu     " VERDE_B BOLD "|\n" RESET);
     printf(VERDE_B BOLD "+------------------------------------------------------------+\n" RESET);
@@ -396,7 +396,8 @@ int main() {
             case 0:
                 instrucciones(1);
                 break;
- 
+            
+            //   JUGAR  (EDO)
             case 1: {
                 barajear_tabla(tabla);
                 barajear_mano(cartas);
@@ -446,11 +447,13 @@ int main() {
                 } while (c > 0);
                 break;
             }
- 
+
+            //   DIFICULTAD     (ROONEY)
             case 2:
                 elegir_dificultad(&ManosR, &DescardR, &scoreGoal);
                 break;
- 
+            
+            //   TIENDA     (JOSE)
             case 3: {
                 limpiar_pantalla();
                 printf("\n");
@@ -465,6 +468,7 @@ int main() {
                 break;
             }
  
+            //   FINALIZAR      (AZUL)
             case 4:
                 resumen_partida(score, scoreGoal, multiglobal,
                                 manosIniciales, ManosR,
